@@ -1,0 +1,3 @@
+安装vueCli	：npm install -g @vue/cli
+查看版本：vue --version
+快速原型开发需要的扩展：npm install -g @vue/cli-service-global
