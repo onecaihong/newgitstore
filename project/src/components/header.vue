@@ -51,11 +51,9 @@
                             </svg>
                         </div>
                         <div class="item" v-show="showtype=='InfoLog'">
-                            
                                 <router-link  to="/infolog"  class="head_login">
                                     <span class="login_span">查看日志</span>
                                 </router-link> 
-                            
                         </div>
                     </li>
                     <li class="fl header_li">
@@ -156,14 +154,13 @@ export default {
             SignMakerLogin: ''
         }
     },
-    
-    created(){
-        document.addEventListener('click',(e)=>{
-            if(!this.$refs.box.contains(e.target)){
-                this.showtype = '';
-            }
-        })
-    },
+    // created(){
+    //     document.addEventListener('click',(e)=>{
+    //         if(!this.$refs.box.contains(e.target)){
+    //             this.showtype = '';
+    //         }
+    //     })
+    // },
     computed: {
         ...mapState([
             'loginStatus',
@@ -174,7 +171,6 @@ export default {
         ...mapMutations,
         showItem (type) {
             var ul=document.getElementsByClassName("header_ul")[0];
-            console.log(ul);
             if(ul){
                 if(!ul.contains(event.target)){
                     this.showtype='';

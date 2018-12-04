@@ -8,6 +8,11 @@ import UserIndex from './views/User/Index'
 import UserEdit from './views/User/Edit'
 import UserDetail from './views/User/Detail'
 import UserCreat from './views/User/Creat'
+import SignMaker from './views/SignMaker/Index'
+import SignMakerEdit from './views/SignMaker/Edit'
+import SignMakerCreat from './views/SignMaker/Creat'
+import SignMakerDetail from './views/SignMaker/Detail'
+import InfoLog from './views/InfoLog'
 
 Vue.use(Router)
 
@@ -42,6 +47,26 @@ export const constantRouterMap =[{
         {
             path:'/user/creat',
             component: UserCreat
+        },
+        {
+            path:'/signmaker',
+            component: SignMaker
+        },
+        {
+            path:'/signmaker/edit',
+            component: SignMakerEdit
+        },
+        {
+            path:'/signmaker/creat',
+            component: SignMakerCreat
+        },
+        {
+            path:'/signmaker/detail',
+            component: SignMakerDetail
+        },
+        {
+            path:'/infolog',
+            component: InfoLog
         },
     ]
 }]

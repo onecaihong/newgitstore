@@ -7,7 +7,7 @@ import getters from './getters'
 Vue.use(Vuex)
 
 const state = {
-	loginStatus: true,  // false:未登录 true：已登录
+	loginStatus: false,  // false:未登录 true：已登录
     loginPower: 1 // 1:管理员 0:普通用户
 }
 

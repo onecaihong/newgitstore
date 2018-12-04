@@ -2,26 +2,40 @@
     <div >
         <head-top></head-top>
         <div class="container">
-            <h2 style="margin:20px 0">管理员列表</h2>
+            <h2 style="margin:20px 0">制章人列表</h2>
             <hr>
             <table>
                 <thead>
                     <tr>
-                        <th>姓名</th>
-                        <th>电话</th>
-                        <th>邮箱</th>
+                        <th>用户名</th>
+                        <th>证书序列号</th>
+                        <th>证书使用者</th>
+                        <th>证书颁发者</th>
+                        <th>创建日期</th>
+                        <th>备注</th>
+                        <th>证书开始日期</th>
+                        <th>证书过期日期</th>
+                        <th>证书</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in info" :key="index">
-                        <td>{{item.userName}}</td>
-                        <td>{{item.phoneNumber}}</td>
-                        <td>{{item.email}}</td>
+                        <td>{{item.signMaker.userName}}</td>
+                        <td>{{item.signMaker.arrayNo}}</td>
+                        <td>{{item.subject}}</td>
+                        <td>{{item.issuer}}</td>
+                        <td>{{item.signMaker.createDate}}</td>
+                        <td>{{item.signMaker.remark}}</td>
+                        <td>{{item.notBefore}}</td>
+                        <td>{{item.notAfter}}</td>
                         <td>
-                            <router-link :to="{ path: '/user/detail', query: { id: item.id }}">查看</router-link>
-                            <router-link :to="{ path: '/user/edit', query: { id: item.id }}">编辑</router-link>
-                            <button @click='del(item.id)'>删除</button>
+                            <a :href="'http://localhost:54905/SignMaker/DownCert/'+item.signMaker.id" download>点击下载</a>
+                        </td>
+                        <td>
+                            <router-link :to="{ path: '/signmaker/detail', query: { id: item.signMaker.id }}">查看</router-link>
+                            <router-link :to="{ path: '/signmaker/edit', query: { id: item.signMaker.id }}">编辑</router-link>
+                            <button @click='del(item.signMaker.id)'>删除</button>
                         </td>
                     </tr>
                 </tbody>
@@ -42,7 +56,6 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 import HeadTop from '../../components/header'
 import FootBottom from '../../components/footer'
 export default {
@@ -55,12 +68,6 @@ export default {
             isdel:false
         }
     },
-    computed: {
-        ...mapState([
-            'loginStatus',
-            'loginPower'
-        ])
-    },
     created(){
         this.getdata(this.currentPage);  
     },
@@ -72,16 +79,16 @@ export default {
          getdata(pageNum){
              var that=this;
              that.pageNum=pageNum;
-            console.log(111);
-            console.log(this.loginStatus);
+             console.log(this);
             var formData=new FormData();
             formData.append('PageSize',10);
             formData.append('PageIndex',pageNum);
             this.axios({
                 method: 'POST',
-                url: '/User/Index',
+                url: '/SignMaker/Index',
                 data: formData
             }).then(function(res){
+                console.log(res.data);
                 that.total=res.data.total;
                 that.info=res.data.data;
                  that.isdel=false
@@ -95,17 +102,31 @@ export default {
          },
          del(param){
              var that=this;
-            this.axios.get("/User/Delete/"+param).then(function(res){
+            this.axios.get("/SignMaker/Delete/"+param).then(function(res){
                 console.log(res);
                 that.isdel=true;
                 // that.getdata(that.pageNum);
             })
+         },
+         download(id){
+            //  var that=this;
+            // this.axios.get("/SignMaker/DownCert/"+id).then(function(res){
+            //     console.log(res);
+            //     // that.getdata(that.pageNum);
+            // })
+            var eleForm = ("<form method='get'></form>");
+
+            eleForm.attr("action","/SignMaker/DownCert/"+id);
+
+            (document.body).append(eleForm);
+
+            //提交表单，实现下载
+            eleForm.submit();
          }
      },
      watch: {
         isdel:function(value) {
             if(value)
-
                 this.getdata(this.currentPage); 
         }
     }

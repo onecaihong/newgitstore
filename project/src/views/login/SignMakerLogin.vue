@@ -15,11 +15,13 @@
                 </div>
             </form>
         </div>
+         <foot-bottom></foot-bottom>
     </div>
 </template>
 
 <script>
 import HeadTop from "../../components/header"
+import FootBottom from '../../components/footer'
 export default {
     data(){
         return{
@@ -28,7 +30,7 @@ export default {
     },
      components:{
         HeadTop,
-        
+        FootBottom
     },
 }
 </script>

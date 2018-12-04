@@ -2,25 +2,38 @@
     <div >
         <head-top></head-top>
         <div class="container">
-            <h2 style="margin:20px 0">管理员详情</h2>
+            <h2 style="margin:20px 0">制章人列表</h2>
             <hr>
             <table>
                 <thead>
                     <tr>
                         <th>用户名</th>
-                        <th>电话号码</th>
-                        <th>电子邮箱</th>
+                        <th>序列号</th>
+                        <th>证书使用者</th>
+                        <th>证书颁发者</th>
+                        <th>证书</th>
+                        <th>创建日期</th>
+                        <th>备注</th>
+                        <th>证书开始日期</th>
+                        <th>证书过期日期</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr >
-                        <td>{{this.info.userName}}</td>
-                        <td>{{this.info.phoneNumber}}</td>
-                        <td>{{this.info.email}}</td>
+                    <tr v-if="info">
+                        <td>{{signMaker.userName}}</td>
+                        <td>{{signMaker.arrayNo}}</td>
+                        <td>{{info.subject}}</td>
+                        <td>{{info.issuer}}</td>
+                        <td>
+                            <a :href="'http://localhost:54905/SignMaker/DownCert/'+id" download>点击下载</a>
+                        </td>
+                        <td>{{signMaker.createDate}}</td>
+                        <td>{{signMaker.remark}}</td>
+                        <td>{{info.notBefore}}</td>
+                        <td>{{info.notAfter}}</td>
                     </tr>
                 </tbody>
             </table>
-          <router-link to="/user">调回列表页面</router-link>
          <foot-bottom></foot-bottom>
         </div>
     </div>
@@ -33,51 +46,39 @@ export default {
     data(){
         return {
             info:{},//数据
-            id:''
+            signMaker:{},
+            id:null
         }
     },
     created(){
-        this.getdata();
-        this.id = this.$route.query.id;
+        this.id=this.$route.query.id;
+        this.getdata(this.$route.query.id);  
     },
     components: {
         HeadTop,
         FootBottom
     },
     methods:{
-        
-         getdata(){
+         getdata(id){
              var that=this;
-             console.log(this);
-             var formData=new FormData();
-            formData.append('id',this.id);
-            // this.axios({
-            //     method: 'get',
-            //     url: '/User/Details/'+this.id,
-            //     //  data: formData
-            // }).then(function(res){
-            //     // that.total=res.data.total;
-            //     // that.info=res.data.data;
-            //     console.log(res.data.data);
-            //     // this.RECORD_USERINFO(res.data.data,res.status,1);
-            // }).catch(function(err){
-            //     if(err.response) {
-            //         console.log(err.response)
-            //         //控制台打印错误返回的内容
-            //     }
-            // })
-            this.axios.get("/User/Details/"+this.$route.query.id).then(function(res){
+             console.log(this.$route.query.id);
+            var formData=new FormData();
+            formData.append('Id',id);
+            this.axios.get("/SignMaker/Details/"+id).then(function(res){
                 console.log(res);
                 that.info=res.data.data;
+                that.signMaker=res.data.data.signMaker;
+                // that.getdata(that.pageNum);
             })
          }
-     }
+    }
 }
+     
 
 </script>
 
 <style>
-h2{
+    h2{
         font-size:30px;
         font-weight:500;
     }

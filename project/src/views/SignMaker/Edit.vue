@@ -11,10 +11,10 @@
                 </div>
                 <div class="form_item">
                     <label for="upwd">密码:</label><br>
-                    <input type="password" id="upwd" name="Pwd" v-model="Pwd">
+                    <input type="text" id="upwd" name="Remark" v-model="Remark">
                 </div>
                 <div class="form_item">
-                    <button id="login" type="button" class="btn btn-default" @click="adminLogin">登录</button>
+                    <button id="login" type="button" class="btn btn-default" @click="save">保存</button>
                 </div>
             </form>
         <foot-bottom></foot-bottom>
@@ -23,60 +23,55 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
 import HeadTop from '../../components/header'
 import FootBottom from '../../components/footer'
 
 export default {
     data(){
         return {
+            Id:null,
             UserName:null,
-            Pwd:null
+            Remark:null
         }
     },
-    computed: {
-        ...mapState([
-            'loginStatus',
-            'loginPower'
-        ])
+    created(){
+        this.Id=this.$route.query.id;
+        this.getdata(this.$route.query.id);  
     },
     components:{
         HeadTop,
         FootBottom
     },
     methods:{
-        ...mapMutations([
-            "RECORD_USERINFO",
-            "New_loginStatus",
-            "New_loginPower"
-        ]),
-        adminLogin(){
-            var that=this;
+        getdata(id){
+             var that=this;
+             console.log(this.$route.query.id);
             var formData=new FormData();
-            formData.append('UserName',this.UserName);
-            formData.append('Pwd',this.Pwd);
-            this.axios({
-                method: 'post',
-                url: '/Login/Login',
-                data: formData
-            }).then(function(res){
+            formData.append('Id',id);
+            this.axios.get("/SignMaker/Edits/"+id).then(function(res){
                 console.log(res);
-                // that.loginStatus=true;
-                // that.loginPower=1;
-                that.$store.commit('New_loginStatus', true);
-                that.$store.commit('New_loginPower', 1);
-                that.New_loginStatus(true);
-                that.New_loginPower(1);
-                that.RECORD_USERINFO(res.data.data,true,1);
-                that.$router.push('/user');
+                that.UserName=res.data.data.userName;
+                that.Remark=res.data.data.remark;
+                // that.getdata(that.pageNum);
+            })
+         },
+         save(){
+             var that=this;
+            this.axios.post('/SignMaker/Edit',{
+                Id:this.Id,
+                UserName:this.UserName,
+                Remark:this.Remark,
+            }).then(function(res){
+                if(res.data.state==200){
+                    that.$router.push("/SignMaker")
+                }
             }).catch(function(err){
                 if(err.response) {
                     console.log(err.response)
                     //控制台打印错误返回的内容
                 }
             })
-           
-        }
+         }
     }
 }
 </script>
