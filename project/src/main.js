@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import store from './store/store'
-import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 // import VueAxios from 'vue-axios'
 import global_ from './config/global'
@@ -17,7 +16,6 @@ axios.defaults.withCredentials=true
 // Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 Vue.prototype.axios = axios
-
 Vue.use(BootstrapVue)
 
 new Vue({

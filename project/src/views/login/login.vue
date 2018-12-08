@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
+import { mapMutations} from 'vuex'
 import HeadTop from '../../components/header'
 import FootBottom from '../../components/footer'
 
@@ -34,12 +34,12 @@ export default {
             Pwd:null
         }
     },
-    computed: {
-        ...mapState([
-            'loginStatus',
-            'loginPower'
-        ])
-    },
+    // computed: {
+    //     ...mapState([
+    //         'loginStatus',
+    //         'loginPower'
+    //     ])
+    // },
     components:{
         HeadTop,
         FootBottom
@@ -47,9 +47,8 @@ export default {
     methods:{
         ...mapMutations([
             "RECORD_USERINFO",
-            "New_loginStatus",
-            "New_loginPower"
         ]),
+        
         adminLogin(){
             var that=this;
             var formData=new FormData();
@@ -60,14 +59,9 @@ export default {
                 url: '/Login/Login',
                 data: formData
             }).then(function(res){
-                console.log(res);
-                // that.loginStatus=true;
-                // that.loginPower=1;
-                that.$store.commit('New_loginStatus', true);
-                that.$store.commit('New_loginPower', 1);
-                that.New_loginStatus(true);
-                that.New_loginPower(1);
-                that.RECORD_USERINFO(res.data.data,true,1);
+                that.$store.commit('RECORD_USERINFO',{data:res.data.data,Status:true,power:0});
+                sessionStorage.setItem("loginStatus",true)
+                sessionStorage.setItem("loginPower",0)
                 that.$router.push('/user');
             }).catch(function(err){
                 if(err.response) {

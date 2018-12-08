@@ -1,21 +1,28 @@
-import { RECORD_USERINFO } from './mutation-types'
-import { New_loginStatus } from './mutation-types'
-import { New_loginPower } from './mutation-types'
+import { 
+    RECORD_USERINFO ,
+    New_loginStatus,
+    New_makerCertSN,
+} from './mutation-types.js'
 
 import {setStore} from '../config/mUtils'
 
 export default {
-    [RECORD_USERINFO] (state,data,Status,power){
-        console.log(power);
+    [RECORD_USERINFO](state,{data,Status,power}){
         state.loginStatus = Status;
-        console.log(state.loginStatus);
         state.loginPower = power;
         setStore('user_id', data.id);
     },
-    [New_loginStatus](state,data){
-        state.loginStatus = data;
+    [New_loginStatus](state,{Status,power}){
+        state.loginStatus = Status;
+        state.loginPower = power;
     },
-    [New_loginPower](state,data){
-        state.loginPower = data;
-    },
+    // [New_loginPower](state,{data}){
+        
+    // },
+    [New_makerCertSN](state,{CertSN,Code}){
+        console.log({CertSN,Code});
+        state.makerCertSN = CertSN;
+        state.ValidateCode = Code;
+    }
+    
 }

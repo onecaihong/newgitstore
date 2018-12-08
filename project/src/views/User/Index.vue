@@ -61,14 +61,18 @@ export default {
             'loginPower'
         ])
     },
-    created(){
-        this.getdata(this.currentPage);  
+    mounted(){
+        this.getdata(this.currentPage); 
+        this.showloginStatus(); 
     },
     components: {
         HeadTop,
         FootBottom
     },
     methods:{
+        showloginStatus(){
+            console.log(this.loginStatus);
+        },
          getdata(pageNum){
              var that=this;
              that.pageNum=pageNum;

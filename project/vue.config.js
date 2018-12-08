@@ -38,54 +38,81 @@ module.exports = {
     // webpack配置
     // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
     chainWebpack: () => {},
-    configureWebpack:  {
-    //     module:{
-    //         rules: [
-    //         {
-    //           test: /\.vue$/,
-    //           loader: 'eslint-loader',
-    //           exclude: /node_modules/
-    //         },
-    //         {
-    //           test: /\.js$/,
-    //           loader: 'eslint-loader',
-    //           exclude: /node_modules/
-    //         },
-    //         {
-    //           test: /\.js$/,
-    //           loader: 'babel-loader',
-    //           exclude: /node_modules/
-    //           // query: { presets: ['es2015'] }
-    //         },
-    //         {
-    //           test: /\.vue$/,
-    //           loader: 'vue-loader',
-    //           options: {
-    //               loaders: {
-    //                   // Customize to your liking
-    //                   js: 'babel-loader',
-    //                   scss: [
-    //                       'style-loader',
-    //                       'css-loader',
-    //                       'sass-loader'
-    //                   ]
-    //               }
-    //           }
-    //         },
-    //         {
-    //           test: /\.json$/,
-    //           loader: 'json-loader'
-    //         },
-    //         {
-    //           test: /\.(png|jpg|gif|svg)$/,
-    //           loader: 'url-loader',
-    //           query: {
-    //             limit: 10000,
-    //             name: '[name].[ext]?[hash:7]'
-    //           }
-    //         }
-    //       ]
-    //     }
+    configureWebpack: (config) =>  {
+        // config.module.rules.push({
+            // 处理jquery
+        //     config.module
+        //         .rule('vue')
+        //         .use('vue-loader')
+        //             .loader('vue-loader')
+        //             .tap(options => {
+        //             // 修改它的选项...
+        //             return  {
+        //                       loaders: {
+        //                           // Customize to your liking
+        //                           js: 'babel-loader',
+        //                           scss: [
+        //                               'style-loader',
+        //                               'css-loader',
+        //                               'sass-loader'
+        //                           ]
+        //                       }
+        //                   }
+        //             }),
+        //     config
+        //         .module
+        //             .rule('compile')
+        //             .test(/\.js$/)
+        //             .use('babel')
+        //                 .loader('babel-loader');
+        // //   })
+        // module:{
+            // rules: [
+            // {
+            //   test: /\.vue$/,
+            //   loader: 'eslint-loader',
+            //   exclude: /node_modules/
+            // },
+            // {
+            //   test: /\.js$/,
+            //   loader: 'eslint-loader',
+            //   exclude: /node_modules/
+            // },
+            // {
+            //   test: /\.js$/,
+            //   loader: 'babel-loader',
+            //   exclude: /node_modules/
+            //   // query: { presets: ['es2015'] }
+            // },
+            // {
+            //   test: /\.vue$/,
+            //   loader: 'vue-loader',
+            //   options: {
+            //       loaders: {
+            //           // Customize to your liking
+            //           js: 'babel-loader',
+            //           scss: [
+            //               'style-loader',
+            //               'css-loader',
+            //               'sass-loader'
+            //           ]
+            //       }
+            //   }
+            // },
+            // {
+            //   test: /\.json$/,
+            //   loader: 'json-loader'
+            // },
+            // {
+            //   test: /\.(png|jpg|gif|svg)$/,
+            //   loader: 'url-loader',
+            //   query: {
+            //     limit: 10000,
+            //     name: '[name].[ext]?[hash:7]'
+            //   }
+            // }
+        //   ]
+        // }
     },
     // vue-loader 配置项
     // https://vue-loader.vuejs.org/en/options.html

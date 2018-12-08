@@ -1,8 +1,57 @@
 <template>
     <header >
         <div class="headerTop">
-            <section v-if="this.loginStatus&&(this.loginPower==1)" ref="box" class="container">
-                <ul class="header_ul">
+            <section v-if="this.loginStatus&&(this.loginPower==0)" ref="box" class="container">
+                <b-navbar class="navbar" type="dark" variant="dark" toggleable>
+                    <b-navbar-toggle target="nav_dropdown_collapse"></b-navbar-toggle>
+                    <b-collapse is-nav id="nav_dropdown_collapse">
+                        <b-navbar-nav>
+                            <b-nav-item-dropdown text="管理员管理"  right>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/user"  class="head_login">
+                                        <span class="login_span">查看管理员</span>
+                                    </router-link>
+                                </b-dropdown-item>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/user/creat"  class="head_login">
+                                        <span class="login_span">添加管理员</span>
+                                    </router-link>
+                                </b-dropdown-item>
+                            </b-nav-item-dropdown>
+
+                            <b-nav-item-dropdown text="制章人管理" right>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/signmaker" class="head_login">
+                                        <span class="login_span">查看制章人</span>
+                                    </router-link>  
+                                </b-dropdown-item>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/signmaker/creat"  class="head_login">
+                                        <span class="login_span">添加制章人</span>
+                                    </router-link>  
+                                </b-dropdown-item>
+                            </b-nav-item-dropdown>
+                            <b-nav-item-dropdown text="日志管理" right>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/infolog"  class="head_login">
+                                        <span class="login_span">查看日志</span>
+                                    </router-link>  
+                                </b-dropdown-item>
+                            </b-nav-item-dropdown>
+                            <b-nav-item  @click="logout">退出系统</b-nav-item>
+                        </b-navbar-nav>
+                    </b-collapse>
+                </b-navbar>
+
+
+
+
+
+
+
+
+
+                <!-- <ul class="header_ul">
                     <li class="fl header_li">
                         <div @click="showItem('user')">
                            <span >管理员管理</span>
@@ -56,7 +105,7 @@
                                 </router-link> 
                         </div>
                     </li>
-                    <li class="fl header_li">
+                    <li class="fl header_li" @click="logout">
                         <div>
                             <span>退出系统</span>
                             <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
@@ -64,10 +113,53 @@
                             </svg>
                         </div>
                     </li>
-                </ul>
+                </ul> -->
             </section>
-            <section v-if="this.loginStatus&&(this.loginPower==0)" ref="box" class="container">
-                <ul class="header_ul">
+            <section v-if="this.loginStatus&&(this.loginPower==1)" ref="box" class="container">
+                <b-navbar class="navbar" type="dark" variant="dark" toggleable>
+                    <b-navbar-toggle target="nav_dropdown_collapse"></b-navbar-toggle>
+                    <b-collapse is-nav id="nav_dropdown_collapse">
+                        <b-navbar-nav style="font-size:16px">
+                            <b-nav-item-dropdown text="印章管理"  right>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/producesign/creat" class="head_login">
+                                        <span class="login_span">制章</span>
+                                    </router-link>
+                                </b-dropdown-item>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/producesign/verify" class="head_login">
+                                        <span class="login_span">验章</span>
+                                    </router-link>
+                                </b-dropdown-item>
+                                <b-dropdown-item href="#">
+                                    <router-link   to="/producesign/restore" class="head_login">
+                                        <span class="login_span">恢复印章</span>
+                                    </router-link>
+                                </b-dropdown-item>
+                            </b-nav-item-dropdown>
+
+                            <b-nav-item-dropdown text="日志管理" right>
+                                <b-dropdown-item href="#">
+                                    <router-link  to="/infolog" class="head_login">
+                                        <span class="login_span">查看日志</span>
+                                    </router-link>  
+                                </b-dropdown-item>
+                            </b-nav-item-dropdown>
+
+                            <b-nav-item  @click="logout">退出系统</b-nav-item>
+                        </b-navbar-nav>
+                    </b-collapse>
+                </b-navbar>
+
+
+
+
+
+
+
+
+
+                <!-- <ul class="header_ul">
                     <li class="fl header_li">
                         <div @click="showItem('ProduceSign')">   
                             <span >印章管理</span>
@@ -108,19 +200,38 @@
                             </div>
                         </div>
                     </li>
-                    <li class="fl header_li">
+                    <li class="fl header_li" @click="logout">
                         <div>
-                            <span>退出系统</span>
+                            <span >退出系统</span>
                             <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
                                 <polygon points="0,3 10,3 5,8"/>
                             </svg>
                         </div>
                         
                     </li>
-                </ul>
+                </ul> -->
             </section>
             <section v-if="!this.loginStatus" ref="box" class="container">
-                <ul class="header_ul">
+                    <b-navbar class="navbar" type="dark" variant="dark" toggleable>
+                        <b-navbar-toggle target="nav_dropdown_collapse"></b-navbar-toggle>
+                        <b-collapse is-nav id="nav_dropdown_collapse">
+                            <b-navbar-nav>
+                                <b-nav-item-dropdown text="登录系统" right>
+                                    <b-dropdown-item href="#">
+                                        <router-link to="/login"  class="head_login">
+                                            管理员
+                                        </router-link> 
+                                    </b-dropdown-item>
+                                    <b-dropdown-item href="#">
+                                        <router-link to="/SignMakerLogin"  class="head_login">
+                                            制章人
+                                        </router-link>
+                                    </b-dropdown-item>
+                                </b-nav-item-dropdown>
+                            </b-navbar-nav>
+                        </b-collapse>
+                    </b-navbar>
+                <!-- <ul class="header_ul">
                     <li class="fl header_li">
                         <div @click="showItem('login')">
                             <span>登录系统</span>
@@ -138,7 +249,7 @@
                                 </router-link>
                         </div>
                     </li>
-                </ul>
+                </ul> -->
             </section>
         </div>
     </header>
@@ -154,13 +265,23 @@ export default {
             SignMakerLogin: ''
         }
     },
-    // created(){
-    //     document.addEventListener('click',(e)=>{
-    //         if(!this.$refs.box.contains(e.target)){
-    //             this.showtype = '';
-    //         }
-    //     })
-    // },
+    created(){
+        //在页面加载时读取sessionStorage里的状态信息
+        if (sessionStorage.getItem("loginStatus") ) {
+            this.$store.commit('New_loginStatus',{Status:JSON.parse(sessionStorage.getItem("loginStatus")),power:JSON.parse(sessionStorage.getItem("loginPower"))});
+            // this.$store.commit('New_loginPower',JSON.parse(sessionStorage.getItem("loginPower")));
+            console.log(this.loginStatus);
+        } 
+        //在页面刷新时将vuex里的信息保存到sessionStorage里
+        // window.addEventListener("beforeunload",()=>{
+        //     sessionStorage.setItem("store",JSON.stringify(this.$store.state))
+        // })
+        // document.addEventListener('click',(e)=>{
+        //     if(!this.$refs.box.contains(e.target)){
+        //         this.showtype = '';
+        //     }
+        // })
+    },
     computed: {
         ...mapState([
             'loginStatus',
@@ -168,22 +289,50 @@ export default {
         ])
     },
     methods: {
-        ...mapMutations,
-        showItem (type) {
-            var ul=document.getElementsByClassName("header_ul")[0];
-            if(ul){
-                if(!ul.contains(event.target)){
-                    this.showtype='';
-                }else{
-                    if (this.showtype !== type) {
-                        this.showtype = type
-                    } else {
-                        this.showtype = ''
-                    } 
-                }
+        ...mapMutations([
+            "RECORD_USERINFO",
+            "New_loginStatus",
+        ]),
+        // showItem (type) {
+        //     var ul=document.getElementsByClassName("header_ul")[0];
+        //     if(ul){
+        //         if(!ul.contains(event.target)){
+        //             this.showtype='';
+        //         }else{
+        //             if (this.showtype !== type) {
+        //                 this.showtype = type
+        //             } else {
+        //                 this.showtype = ''
+        //             } 
+        //         }
                
-            }
+        //     }
             
+        // },
+        logout(){
+            console.log(11);
+            var that=this;
+            this.axios.get("/Login/Logout").then(function(data){
+                console.log(data);
+                if (data.data != null && data.data.state == '200') {
+                    if (data.data.logintype == '0') {
+                        that.$store.commit('New_loginStatus',{loginStatus:false,loginPower:0});
+                        // that.$store.commit('New_loginPower',0);
+                        sessionStorage.setItem("loginStatus",false)
+                        sessionStorage.setItem("loginPower",0)
+                        that.$router.push('/login');
+                    } else {
+                        that.$store.commit('New_loginStatus',{loginStatus:false,loginPower:1});
+                        // that.$store.commit('New_loginStatus',false);
+                        // that.$store.commit('New_loginPower',1);
+                        sessionStorage.setItem("loginStatus",false)
+                        sessionStorage.setItem("loginPower",1)
+                        that.$router.push('/signMakerLogin');
+                    }
+                }
+            }).catch(function(res){
+                console.log(res);
+            })
         },
         initData (){
             // if(this.loginStatus)
@@ -195,12 +344,15 @@ export default {
 <style scoped>
     .headerTop{
         height:80px;
-        background:#222;
+        background:#343a40;
         width:100%;
     }
-    .header_ul{
+    .navbar{
         color:aliceblue;
-        height:100%;
+        height:80px;
+    }
+    ul li div span{
+        font-size:18px
     }
     .header_li{
         

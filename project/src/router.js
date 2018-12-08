@@ -13,6 +13,9 @@ import SignMakerEdit from './views/SignMaker/Edit'
 import SignMakerCreat from './views/SignMaker/Creat'
 import SignMakerDetail from './views/SignMaker/Detail'
 import InfoLog from './views/InfoLog'
+import ProduceSignCreate from './views/ProduceSign/Create'
+import ProduceSignRestore from './views/ProduceSign/Restore'
+import ProduceSignVerify from './views/ProduceSign/Verify'
 
 Vue.use(Router)
 
@@ -67,6 +70,18 @@ export const constantRouterMap =[{
         {
             path:'/infolog',
             component: InfoLog
+        },
+        {
+            path:'/ProduceSign/Create',
+            component: ProduceSignCreate
+        },
+        {
+            path:'/ProduceSign/Verify',
+            component: ProduceSignVerify
+        },
+        {
+            path:'/ProduceSign/Restore',
+            component: ProduceSignRestore
         },
     ]
 }]
