@@ -2,11 +2,11 @@
     <div >
         <head-top></head-top>
         <div class="container">
-            <h2 style="margin:20px 0">管理员登录</h2>
+            <h2 style="margin:20px 0">验章</h2>
             <hr>
             <b-card  no-body > 
             <b-tabs  card > 
-                <b-tab  no-body  title = "UKEY制章"  active > 
+                <b-tab  no-body  title = "UKEY制章" @click="info=true;Cer_info=false" active > 
                     <form class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">选择验证的UKEY</label>
@@ -19,7 +19,7 @@
                         <div class="form-group">
                             <label for="sealName" class="col-sm-2 control-label">印章名称</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="sealName" v-model="sealName">
+                                <input type="text" class="form-control"  readonly="readonly" id="sealName" v-model="sealName">
                             </div>
                         </div>
                         <div class="form-group">
@@ -53,32 +53,33 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">制章人证书</label>
                             <div class="col-sm-10">
-                                <a id="makerCertBase64" class="btn btn-default">下载</a>
+                                <a id="makerCertBase64" class="btn btn-default" @click="downLoadMakerCer">下载</a>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">印章绑定证书</label>
                             <div class="col-sm-10">
-                                <a id="userCertBase64"  class="btn btn-default">下载</a>
+                                <a id="userCertBase64"  class="btn btn-default" @click="downLoadUserCer">下载</a>
                             </div>
                         </div>
                         <input type="hidden" id="sealBase64" />
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <input id="btnCreate" type="button" value="验证印章" class="btn btn-default" />
+                                <input id="btnCreate" type="button"  @click="btnCreate"  :disabled="isDisabled?true:false" value="验证印章" class="btn btn-default" />
                             </div>
                         </div>
                     </form>
 
 
                 </b-tab > 
-                <b-tab  no-body  title = "证书制章" > 
+                <b-tab  no-body  title = "证书制章"  @click="Cer_info=true;info=false"  > 
                     <form class="form-horizontal">
                         <div class="form-group " id="cer">
                             <label class="col-sm-2 control-label">用户证书</label>
                             <div class="col-sm-10" style="line-height: 30px;">
-                                <button type="button" class="btn btn-default" id="ImportConfig">点击上传印章</button>
-                                <span id="filename"></span>
+                                <input @change="uploadPhoto($event)" type="file" id="Cer_ImportConfig">
+                                <!-- <button type="button" class="btn btn-default" id="Cer_ImportConfig">点击上传证书</button>
+                                <span id="Cer_filename"></span> -->
                             </div>
                         </div>
                         <div class="form-group">
@@ -118,19 +119,19 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">制章人证书</label>
                             <div class="col-sm-10">
-                                <a id="cer_makerCertBase64" class="btn btn-default">下载</a>
+                                <a id="cer_makerCertBase64" class="btn btn-default" @click="Cer_downLoadMakerCer">下载</a>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">印章绑定证书</label>
                             <div class="col-sm-10">
-                                <a id="cer_userCertBase64" class="btn btn-default">下载</a>
+                                <a id="cer_userCertBase64" class="btn btn-default"  @click="Cer_downLoadUserCer">下载</a>
                             </div>
                         </div>
                         <input type="hidden" id="cer_sealBase64" />
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <input id="cer_btnCreate" type="button" value="验证印章" class="btn btn-default" />
+                                <input id="cer_btnCreate" type="button"  @click="Cer_btnCreate" value="验证印章"  :disabled="Cer_isDisabled?true:false" class="btn btn-default" />
                             </div>
                         </div>
                     </form>
@@ -139,12 +140,21 @@
                 
             </b-tabs > 
             </b-card >
-            <h6 v-if="title_1">正在获取UKEY证书</h6>
-            <h6 v-if="title_2">制章人UKEY与用户UKEY不能为同一个</h6>
-            <h6 v-if="title_3">正在验证PIN码</h6>
-            <h6 v-if="title_4">未插入制章人UKEY，无法完成操作</h6>
-            <h6 v-if="title_5">正在制章...</h6>
-            <h6 v-if="title_6">制章成功</h6>
+            <div  v-show="info">
+                <h6 v-if="title_1">正在获取UKEY证书</h6>
+                <h6 v-if="title_2">正在读取印章</h6>
+                <h6 v-if="title_3">印章合法</h6>
+                <h6 v-if="title_4">印章验证错误</h6>
+                <h6 v-if="title_5">{{returnmsg}}</h6>
+                <h6 v-if="title_6">印章验证完成</h6>
+            </div>
+            <div  v-show="Cer_info">
+                <h6 v-if="Cer_title_1">印章合法</h6>
+                <h6 v-if="Cer_title_2">印章验证错误</h6>
+                <h6 v-if="Cer_title_3">{{Cer_returnmsg}}</h6>
+                <h6 v-if="Cer_title_4">印章验证完成</h6>
+            </div>
+            
         <foot-bottom></foot-bottom>
         </div>
     </div>
@@ -172,19 +182,30 @@ export default {
             userCertBase64:null,
             sealBase64:null,
             picBase64:null,     // 印章图片base64
+            Cer_picBase64:null,     // 印章图片base64
             picUrl:null,        //ukey制章印章图片url
             Cer_picUrl:null,    //证书制章印章图片url
             sealHashBase64:null,
             sealSigBase64:null,
             ukeySelect:null,
+            info:true,
             title_1:false,
             title_2:false,
             title_3:false,
             title_4:false,
             title_5:false,
             title_6:false,
+            returnmsg:null,
             isDisabled:false,   // 验章按钮是否禁用
             Cer_isDisabled:false,   // 验章按钮是否禁用
+            Cer_info:false,
+            Cer_title_1:false,
+            Cer_title_2:false,
+            Cer_title_3:false,
+            Cer_title_4:false,
+            Cer_title_5:false,
+            Cer_title_6:false,
+            Cer_returnmsg:null,
         }
     },
     computed: {
@@ -218,264 +239,230 @@ export default {
         ...mapMutations([
             "New_makerCertSN",
         ]),
-        generate:function(){
-            this.GeneratePic(this.userCertSN,(value)=>{
-                var retJObject = JSON.parse(value);
-                console.log(retJObject);
-                if (retJObject.error == "Ok") {
-                    var picBase64 = retJObject.picBase64;
-                    this.picUrl="data:image/png;base64," + picBase64;
-                    // $("#pic").attr("src", "data:image/png;base64," + picBase64);
-                   this.picBase64=picBase64;
-                }
-            })
-        },
-        Cer_generate:function(){
-            var _this=this;
-            var certSN = this.userCertBase64;
-            console.log(certSN);
-            this.GeneratePic(certSN,
-                function (value) {
-                    var retJObject = JSON.parse(value);
-                    console.log(retJObject);
-                    if (retJObject.error == "Ok") {
-                        var picBase64 = retJObject.picBase64;
-                        console.log(_this);
-                        _this.Cer_picUrl="data:image/png;base64," + picBase64;
-                        // $("#cer_pic").attr("src", "data:image/png;base64," + picBase64);
-                        _this.picBase64=picBase64;
-                        // $("#cer_picBase64").val(picBase64);
-                    } else {
-                        alert(retJObject.error);
-                    }
-                });
-        },
-        // upload_file:function(){
-        //     // var file = $('#upload_file').get(0).files[0];
-        //     var dom=document.getElementById("upload_file");
-        //     var file=dom.files[0];
-        //     console.log(file);
-        //     if (!/image\/\w+/.test(file.type)) {
-        //         alert("请确保文件为图像类型");
-        //         return;
-        //     }
-        //     var r = new FileReader();  //本地预览
-        //     r.onload = function() {
-        //         // $("#pic").attr("src", r.result);
-        //         this.picUrl=r.result
-        //         // $("#picBase64").val(r.result.substring(r.result.indexOf(',') + 1));
-        //         this.picBase64=r.result.substring(r.result.indexOf(',') + 1);
-        //         console.log(this.picBase64);
-        //     };
-        //     r.readAsDataURL(file);    //Base64
-        // },
-        // cer_upload_file:function(){
-        //     var dom=document.getElementById("Cer_upload_file");
-        //     var file=dom.files[0];
-        //     if (!/image\/\w+/.test(file.type)) {
-        //         alert("请确保文件为图像类型");
-        //         return;
-        //     }
-        //     var r = new FileReader();  //本地预览
-        //     r.onload = function () {
-        //         // $("#cer_pic").attr("src", r.result);
-        //         this.Cer_picUrl=r.result;
-        //         // $("#cer_picBase64").val(r.result.substring(r.result.indexOf(',') + 1));
-        //         this.picBase64=r.result.substring(r.result.indexOf(',') + 1);
-        //         console.log(this.picBase64);
-        //     };
-        //     r.readAsDataURL(file);    //Base64
-        // },
         btnCreate:function(){
-            var sealName = this.sealName;
-            var sealType = this.sealType;
-            var sealStartTime = this.startTime;
-            var sealEndTime = this.endTime;
-            var imgsrc = this.picUrl;
-            if (sealName == '' || (sealType != 1 && sealType != 2) || sealStartTime== "" || sealEndTime=="" || imgsrc == ""){
-                alert("请完善信息！")
-                return;
-            }
             this.isDisabled=true;
             this.title_1=true;
-            if (this.userCertSN == this.makerCertSN) {
-                this.title_2=true;
-                this.isDisabled=false;
-                return;
-            }
-            var certSN = this.makerCertSN;
+            this.title_2=false;
+            this.title_3=false;
+            this.title_4=false;
+            this.title_5=false;
+            this.title_6=false;
+            var certSN = this.userCertSN;
             console.log(certSN);
             this.GetCertAndSeal(certSN, (certAndSeal) =>{
                 console.log(certSN);
                 console.log(certAndSeal);
-                console.log(this);
+                console.log(this.makerCertBase64);
                 var certAndSealJObject = JSON.parse(certAndSeal);
                 if (certAndSealJObject.CertBase64.length != 0) {
-                    this.makerCertBase64 = certAndSealJObject.CertBase64;
+                    this.userCertBase64 = certAndSealJObject.CertBase64;
+                    this.title_2=true;
                 }
             }).then(()=>{
-                return this.GetCertAndSeal(this.userCertSN, (certAndSeal)=> {
-                    var certAndSealJObject = JSON.parse(certAndSeal);
-                    console.log(certAndSealJObject);
-                    if (certAndSealJObject.CertBase64.length != 0) {
-                        this.userCertBase64 = certAndSealJObject.CertBase64;
-                    }
-                    if (this.makerCertBase64 == "") {
-                        this.title_4=true;
-                        return;
-                    }
+                 return this.ReadUkey()
+            }).then(()=>{
+                 return this.GetSealInfo()
+            }).then((ret)=>{
+                    var sealInfo = JSON.parse(ret);
+                    console.log(sealInfo);
                     console.log(this);
-                    this.ifshow=true;
-                })
+                    this.sealName=sealInfo.sealName;
+                    this.sealType=sealInfo.sealType;
+                    this.startTime=sealInfo.startTime;
+                    this.endTime=sealInfo.endTime;
+                    this.makerCertBase64=sealInfo.makerCertBase64;
+                    this.userCertBase64=sealInfo.userCertBase64;
+                    this.picBase64=sealInfo.picBase64;
+                    this.picUrl="data:image/png;base64," + sealInfo.picBase64;
+                    this.VerifySealData().then((ret)=>{
+                        var retObject = JSON.parse(ret);
+                        if (retObject.error == "Ok") {
+                            this.title_3=true;
+                            this.title_4=false;
+                            this.title_5=false;
+                            this.returnmsg=null;
+                        } else {
+                            this.title_3=false;
+                            this.title_4=true;
+                            this.title_5=true;
+                            var errorCode = parseInt(retObject.error.slice(retObject.error.indexOf(":") + 1));
+                            console.log(errorCode);
+                            switch (errorCode) {
+                                case -0xc0101:
+                                    this.returnmsg="无法解析的签章结构";
+                                    break;
+                                case -0xc0102:
+                                     this.returnmsg="BIO读取错误";
+                                    break;
+                                case -0xc0103:
+                                     this.returnmsg="制章人证书结构解析失败";
+                                    break;
+                                case -0xc0104:
+                                     this.returnmsg="PCC为空";
+                                    break;
+                                case -0xc0105:
+                                     this.returnmsg="装填公钥失败";
+                                    break;
+                                case -0xc0106:
+                                     this.returnmsg="签名验证失败";
+                                    break;
+                                case -0xc0107:
+                                     this.returnmsg="制作时间不在印章有效期内";
+                                    break;
+                                case -0xc0108:
+                                     this.returnmsg="印章已过期";
+                                    break;
+                                case -0xc0109:
+                                     this.returnmsg="用户证书结构解析失败";
+                                    break;
+                                case -0xc010a:
+                                     this.returnmsg="根证书储存区初始化失败";
+                                    break;
+                                case -0xc010b:
+                                     this.returnmsg="验证根证书或CRL失败";
+                                    break;
+                                case -0xc010c:
+                                     this.returnmsg="制章人证书不在有效期内";
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                         this.axios({
+                            method: 'POST',
+                            url: '/ProduceSign/Verify',
+                            // data: qs.stringify(this.userCertSN),
+                            headers:{
+                                'Content-Type':"application/x-www-form-urlencoded;charset=UTF-8"
+                            }
+                            }).then((res)=>{
+                                if(res.data.state==200){
+                                    this.title_6=true;
+                                }
+                                this.isDisabled=false;
+                                this.makerCertBase64=null;
+                                this.userCertBase64=null;
+                        })
+                    })
             })
         },
-        btnyes:function(){
-            this.VerifyPin(JSON.stringify({
-                CertID: this.makerCertSN,
-                Pin: this.ukeyPinCode
-            }),
-            (verifyPinRet)=> {
-                if (verifyPinRet != "Ok") {
-                    console.log(this);
-                    this.pinError="Pin码错误，请重新输入";
-                    this.ukeyPinCode=null;
-                } else {
-                    // $("input[name='ukeyPinCode']")
-                    //     .val(layero.find("input[name='ukeyPinCode']").val());
-                    this.ifshow=false;
-                    this.title_5=true;
-                    // resolve();
-                }
-            }).then(()=>{
-                return this.ComputeSealHash()
-            }).then(()=>{
-                return this.ComputeSealSig()
-            }).then(()=>{
-                return this.ComputeSeal()
-            }).then(()=>{
-                return this.WriteUkey()
-            }).then(()=>{
-                var data = {
-                    sealName: this.sealName,
-                    sealType: this.sealType,
-                    startTime: this.startTime,
-                    endTime: this.endTime,
-                    makerCertSN: this.makerCertSN,
-                    makerCertBase64: this.makerCertBase64,
-                    userCertSN: this.userCertSN,
-                    userCertBase64: this.userCertBase64,
-                    sealBase64: this.sealBase64
-                };
-                console.log(this);
-                this.axios({
-                    method: 'POST',
-                    url: '/ProduceSign/Create',
-                    data: qs.stringify(data),
-                    headers:{
-                        'Content-Type':"application/x-www-form-urlencoded;charset=UTF-8"
-                    }
-                    }).then(function(res){
-                    console.log(res);
-                })
-                    
-                this.isDisabled=false;
-            });
-        },
+        
         Cer_btnCreate:function(){
-            var sealName = this.Cer_sealName;
-            var sealType = this.Cer_sealType;
-            var sealStartTime = this.Cer_startTime;
-            var sealEndTime = this.Cer_endTime;
-            var imgsrc = this.Cer_picUrl;
-            if (sealName == '' || (sealType != 1 && sealType != 2) || sealStartTime== "" || sealEndTime=="" || imgsrc == ""){
-                alert("请完善信息！")
-                return;
-            }
+            this.Cer_title_1=false;
+            this.Cer_title_2=false;
+            this.Cer_title_3=false;
+            this.Cer_title_4=false;
+            this.makerCertBase64=null;
+            this.userCertBase64=null;
             this.Cer_isDisabled=true;
-            this.title_1=true;
-            if (this.userCertSN == this.makerCertSN) {
-                this.title_2=true;
-                this.Cer_isDisabled=false;
+            if (this.sealBase64 == null) {
+                this.Cer_isDisabled=true;
                 return;
-            }
+            } 
             var certSN = this.makerCertSN;
             console.log(certSN);
-            this.GetCertAndSeal(certSN, (certAndSeal) =>{
-                console.log(certSN);
-                console.log(certAndSeal);
+            this.GetSealInfo().then((ret)=>{
+                var sealInfo = JSON.parse(ret);
+                console.log(sealInfo);
                 console.log(this);
-                var certAndSealJObject = JSON.parse(certAndSeal);
-                if (certAndSealJObject.CertBase64.length != 0) {
-                    this.makerCertBase64 = certAndSealJObject.CertBase64;
-                }
-            }).then(()=>{
-                // return this.GetCertAndSeal(this.userCertSN, (certAndSeal)=> {
-                //     var certAndSealJObject = JSON.parse(certAndSeal);
-                //     console.log(certAndSealJObject);
-                //     if (certAndSealJObject.CertBase64.length != 0) {
-                //         this.userCertBase64 = certAndSealJObject.CertBase64;
-                //     }
-                    if (this.makerCertBase64 == "") {
-                        this.title_4=true;
-                        return;
+                this.Cer_sealName=sealInfo.sealName;
+                this.Cer_sealType=sealInfo.sealType;
+                this.Cer_startTime=sealInfo.startTime;
+                this.Cer_endTime=sealInfo.endTime;
+                this.makerCertBase64=sealInfo.makerCertBase64;
+                this.userCertBase64=sealInfo.userCertBase64;
+                this.Cer_picBase64=sealInfo.picBase64;
+                this.Cer_picUrl="data:image/png;base64," + sealInfo.picBase64;
+                this.VerifySealData().then((ret)=>{
+                    var retObject = JSON.parse(ret);
+                    if (retObject.error == "Ok") {
+                        this.Cer_title_1=true;
+                        this.Cer_title_2=false;
+                        this.Cer_title_3=false;
+                        this.Cer_returnmsg=null;
+                    } else {
+                        this.Cer_title_1=false;
+                        this.Cer_title_2=true;
+                        this.Cer_title_3=true;
+                        var errorCode = parseInt(retObject.error.slice(retObject.error.indexOf(":") + 1));
+                        console.log(errorCode);
+                        switch (errorCode) {
+                            case -0xc0101:
+                                this.Cer_returnmsg="无法解析的签章结构";
+                                break;
+                            case -0xc0102:
+                                    this.Cer_returnmsg="BIO读取错误";
+                                break;
+                            case -0xc0103:
+                                    this.Cer_returnmsg="制章人证书结构解析失败";
+                                break;
+                            case -0xc0104:
+                                    this.Cer_returnmsg="PCC为空";
+                                break;
+                            case -0xc0105:
+                                    this.Cer_returnmsg="装填公钥失败";
+                                break;
+                            case -0xc0106:
+                                    this.Cer_returnmsg="签名验证失败";
+                                break;
+                            case -0xc0107:
+                                    this.Cer_returnmsg="制作时间不在印章有效期内";
+                                break;
+                            case -0xc0108:
+                                    this.Cer_returnmsg="印章已过期";
+                                break;
+                            case -0xc0109:
+                                    this.Cer_returnmsg="用户证书结构解析失败";
+                                break;
+                            case -0xc010a:
+                                    this.Cer_returnmsg="根证书储存区初始化失败";
+                                break;
+                            case -0xc010b:
+                                    this.Cer_returnmsg="验证根证书或CRL失败";
+                                break;
+                            case -0xc010c:
+                                    this.Cer_returnmsg="制章人证书不在有效期内";
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                    console.log(this);
-                    this.Cer_ifshow=true;
-                // })
+                        this.axios({
+                        method: 'POST',
+                        url: '/ProduceSign/Verify',
+                        // data: qs.stringify(this.userCertSN),
+                        headers:{
+                            'Content-Type':"application/x-www-form-urlencoded;charset=UTF-8"
+                        }
+                        }).then((res)=>{
+                            if(res.data.state==200){
+                                this.Cer_title_4=true;
+                            }
+                            this.Cer_isDisabled=false;
+                            this.makerCertBase64=null;
+                            this.userCertBase64=null;
+                    })
+                })
             })
         },
-        Cer_btnyes:function(){
-            this.VerifyPin(JSON.stringify({
-                CertID: this.makerCertSN,
-                Pin: this.Cer_ukeyPinCode
-            }),
-            (verifyPinRet)=> {
-                if (verifyPinRet != "Ok") {
-                    console.log(this);
-                    this.Cer_pinError="Pin码错误，请重新输入";
-                    this.Cer_ukeyPinCode=null;
-                } else {
-                    // $("input[name='ukeyPinCode']")
-                    //     .val(layero.find("input[name='ukeyPinCode']").val());
-                    this.Cer_ifshow=false;
-                    this.title_5=true;
-                    // resolve();
-                }
-            }).then(()=>{
-                return this.Cer_ComputeSealHash()
-            }).then(()=>{
-                return this.ComputeSealSig()
-            }).then(()=>{
-                return this.ComputeSeal()
-            }).then(()=>{
-                var data = {
-                    sealName: this.sealName,
-                    sealType: this.sealType,
-                    startTime: this.startTime,
-                    endTime: this.endTime,
-                    makerCertSN: this.makerCertSN,
-                    makerCertBase64: this.makerCertBase64,
-                    // userCertSN: this.userCertSN,
-                    userCertBase64: this.userCertBase64,
-                    sealBase64: this.sealBase64
-                };
-                console.log(this);
-                this.axios({
-                    method: 'POST',
-                    url: '/ProduceSign/Create',
-                    data: qs.stringify(data),
-                    headers:{
-                        'Content-Type':"application/x-www-form-urlencoded;charset=UTF-8"
-                    }
-                    }).then(function(res){
-                    console.log(res);
-                })
-                this.Cer_isDisabled=false;
-            });
+        downLoadMakerCer:function(){
+            var blob = this.base64toBlob(this.makerCertBase64, "application/x-x509-ca-cert");
+            this.openDownloadDialog(blob, "makerCert.cer");
+        },
+        downLoadUserCer:function(){
+            var blob = this.base64toBlob(this.userCertBase64, "application/x-x509-ca-cert");
+            this.openDownloadDialog(blob, "userCert.cer");
+        },
+        Cer_downLoadMakerCer:function(){
+            var blob = this.base64toBlob(this.makerCertBase64, "application/x-x509-ca-cert");
+            this.openDownloadDialog(blob, "makerCert.cer");
+        },
+        Cer_downLoadUserCer:function(){
+            var blob = this.base64toBlob(this.userCertBase64, "application/x-x509-ca-cert");
+            this.openDownloadDialog(blob, "userCert.cer");
         },
         // 上传证书得到证书的base64
         uploadPhoto(e) {
-            console.log(this);
             var _this=this;
             // 利用fileReader对象获取file
             var file = e.target.files[0];
@@ -488,7 +475,8 @@ export default {
                 // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
                 var result = e.target.result;
                 console.log(_this);
-                _this.userCertBase64 = result.split("base64,")[1];
+                _this.sealBase64 = result.split("base64,")[1];
+                console.log(_this.sealBase64);
             }
         },
         EnumKey:function (funcBack, errorCallBack) {
@@ -754,11 +742,14 @@ export default {
                     if (retJSONObject.error == "Ok") {
                          _this.sealBase64=retJSONObject.dataBase64;
                         resolve();
+                    }else{
+                        _this.isDisabled=false;
+                        _this.title_5=true;
+                        _this.returnmsg=retJSONObject.error;
                     }
                     socket.close();
                 };
                 socket.onerror = function (e) { console.log("Error: " + e.data); };
-                return dtd.promise();
             })
         },
         GetSealInfo:function () {
@@ -771,13 +762,14 @@ export default {
                     var data = {
                         sealBase64: _this.sealBase64
                     };
+                    console.log(data);
                     socket.send(JSON.stringify(data));
                 };
                 socket.onclose = function (e) { console.log("closed"); };
                 socket.onmessage = function (e) {
                     console.log(e.data);
                     socket.close();
-                    resolve();
+                    resolve(e.data);
                 };
                 socket.onerror = function (e) { console.log("Error: " + e.data); };
             })
@@ -798,7 +790,7 @@ export default {
                 socket.onmessage = function (e) {
                     console.log(e.data);
                     socket.close();
-                    resolve();
+                    resolve(e.data);
                 };
                 socket.onerror = function (e) { console.log("Error: " + e.data); };
             })

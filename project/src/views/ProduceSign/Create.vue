@@ -2,7 +2,7 @@
     <div >
         <head-top></head-top>
         <div class="container">
-            <h2 style="margin:20px 0">管理员登录</h2>
+            <h2 style="margin:20px 0">制章</h2>
             <hr>
             <b-card  no-body > 
             <b-tabs  card > 
